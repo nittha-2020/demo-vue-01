@@ -1,11 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer
-      v-model="drawerRight"
-      app
-      clipped
-      right
-    >
+    <v-navigation-drawer v-model="drawerRight" app clipped right>
       <v-list dense>
         <v-list-item @click.stop="right = !right">
           <v-list-item-action>
@@ -18,22 +13,14 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar
-      app
-      clipped-right
-      color="blue-grey"
-      dark
-    >
+    <v-app-bar app clipped-right color="blue-grey" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>Toolbar</v-toolbar-title>
       <v-spacer />
       <v-app-bar-nav-icon @click.stop="drawerRight = !drawerRight" />
     </v-app-bar>
 
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-    >
+    <v-navigation-drawer v-model="drawer" app>
       <v-list dense>
         <v-list-item @click.stop="left = !left">
           <v-list-item-action>
@@ -46,33 +33,19 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-navigation-drawer
-      v-model="left"
-      fixed
-      temporary
-    />
+    <v-navigation-drawer v-model="left" fixed temporary />
 
     <v-content>
-      <v-container
-        class="fill-height"
-        fluid
-      >
-        <router-view/>
+      <v-container class="fill-height" fluid>
+        <v-layout child-flex>
+          <router-view />
+        </v-layout>
       </v-container>
     </v-content>
 
-    <v-navigation-drawer
-      v-model="right"
-      fixed
-      right
-      temporary
-    />
+    <v-navigation-drawer v-model="right" fixed right temporary />
 
-    <v-footer
-      app
-      color="blue-grey"
-      class="white--text"
-    >
+    <v-footer app color="blue-grey" class="white--text">
       <span>Vuetify</span>
       <v-spacer />
       <span>&copy; 2019</span>
@@ -81,15 +54,15 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      source: String,
-    },
-    data: () => ({
-      drawer: false,
-      drawerRight: true,
-      right: false,
-      left: false,
-    }),
-  }
+export default {
+  props: {
+    source: String
+  },
+  data: () => ({
+    drawer: false,
+    drawerRight: false,
+    right: false,
+    left: false
+  })
+};
 </script>
