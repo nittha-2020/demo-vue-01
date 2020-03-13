@@ -21,6 +21,32 @@
                     <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
+                    <v-menu
+                      ref="menu"
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      :return-value.sync="editedItem.date"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="290px"
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-text-field
+                          v-model="computedDateFormattedMomentjs"
+                          label="Picker in menu"
+                          prepend-icon="mdi-timer"
+                          readonly
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker v-model="editedItem.date" no-title scrollable>
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                        <v-btn text color="primary" @click="$refs.menu.save(editedItem.date)">OK</v-btn>
+                      </v-date-picker>
+                    </v-menu>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
@@ -45,6 +71,7 @@
         </v-dialog>
       </v-toolbar>
     </template>
+    <template v-slot:item.date="{ item }">{{item.date | formatDate }}</template>
     <template v-slot:item.action="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
       <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
@@ -55,9 +82,27 @@
   </v-data-table>
 </template>
 <script>
+import * as moment from "moment";
 export default {
+  filters: {
+    cuttext: function(val) {
+      if (val && val.length > 60) {
+        return val.substring(0, 60) + "...";
+      } else return val;
+    },
+    formatDate: function(val) {
+      if (val) {
+        return moment(String(val)).format("D, MMM YYYY");
+        // return val.substr(11, 5)
+      }
+    }
+  },
   data: () => ({
     dialog: false,
+    // date: new Date().toISOString().substr(0, 10),
+    menu: false,
+    modal: false,
+    menu2: false,
     headers: [
       {
         text: "Dessert (100g serving)",
@@ -66,6 +111,7 @@ export default {
         value: "name"
       },
       { text: "Calories", value: "calories" },
+      { text: "Date", value: "date" },
       { text: "Fat (g)", value: "fat" },
       { text: "Carbs (g)", value: "carbs" },
       { text: "Protein (g)", value: "protein" },
@@ -75,6 +121,7 @@ export default {
     editedIndex: -1,
     editedItem: {
       name: "",
+      date: new Date().toISOString(),
       calories: 0,
       fat: 0,
       carbs: 0,
@@ -91,7 +138,10 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? "New Item1" : "Edit Item2";
+    },
+    computedDateFormattedMomentjs() {
+      return this.editedItem.date ? moment(this.editedItem.date).format("D, MMM YY") : "";
     }
   },
 
@@ -117,7 +167,7 @@ export default {
     },
 
     editItem(item) {
-      console.log(item);
+      // console.log(item);
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
