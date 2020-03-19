@@ -121,7 +121,7 @@ export default {
     editedIndex: -1,
     editedItem: {
       name: "",
-      date: new Date().toISOString(),
+      date: new Date().toISOString().substr(0, 10),
       calories: 0,
       fat: 0,
       carbs: 0,
